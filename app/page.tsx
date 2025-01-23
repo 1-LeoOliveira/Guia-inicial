@@ -1,101 +1,161 @@
-import Image from "next/image";
+'use client'
+import React from 'react';
+import Link from 'next/link';
+import Head from 'next/head';
+import Image from 'next/image';
 
-export default function Home() {
+// Interface para definir os tipos de ferramentas/links
+interface Ferramenta {
+  id: string;
+  nome: string;
+  url: string;
+  descricao?: string;
+  categoria: string;
+  arquivoPDF?: Array<{
+    nome: string;
+    arquivo: string;
+  }>;
+}
+
+// Dados de exemplo com múltiplos PDFs e links internos
+const ferramentas: Ferramenta[] = [
+  {
+    id: '1',
+    nome: 'Gerenciador de IPs',
+    url: 'http://10.41.13.198/phpipam/login/',
+    categoria: 'Sistemas Internos',
+    descricao: 'Sistema para gerencimaneto de IPs',
+  },
+  {
+    id: '2',
+    nome: 'PBX-USERS',
+    url: 'https://10.91.1.41:10000/itflex-pbx-users/',
+    categoria: 'Sistemas Internos',
+    descricao: 'Sistema para gerenciar ramais',
+  },
+  {
+    id: '3',
+    nome: 'IMC',
+    url: 'http://10.41.15.11:8080/imc/login.xhtml?reloginFlag=true',
+    categoria: 'Sistemas Internos',
+    descricao: 'Sistema para gerenciar as portas do switch'
+  },
+  {
+    id: '4',
+    nome: 'OPMON',
+    url: 'https://opmon/opmon/seagull/modules/workspace/templates/login/index.html?initial_page=%2Fopmon%2Fseagull%2Fwww%2Findex.php%2Fopinterface%2Faction%2Fredirect%2F%3Finitial_page%3D%2Fopmon%2Fseagull%2Fwww%2Findex.php%2Fstatusgrid%2Faction%2Fservices%2F%3Ffilter%5Bsearch%5D%3D%26%26filter%255Bstatusgrid%255D%3Dservices',
+    categoria: 'Sistemas Internos',
+    descricao: 'Sistema para visualizar status da rede e APs'
+  },
+  {
+    id: '5',
+    nome: 'ITSM',
+    url: 'https://itsm.stcruz.com.br/softexpert/workspace?page=home',
+    categoria: 'Sistemas Internos',
+    descricao: 'Sistema para abertura de chamados'
+  },
+  {
+    id: '6',
+    nome: 'RICOH STREAMLINE NX',
+    url: 'http://10.41.13.205:8080/userconsole.html?locale=pt_BR',
+    categoria: 'Sistemas Internos',
+    descricao: 'Sistema para consultar / gerar novo PIN de impressão'
+  },
+  {
+    id: '7',
+    nome: 'PORTAL DE CONSULTA ',
+    url: 'http://consultauser.gruposc.local:54704/impressoras/index-nf.php',
+    categoria: 'Ferramentas Administrativas',
+    descricao: 'Sistema para consultar HOST / IMPRESSORA / USUARIO'
+  },
+  {
+    id: '8', 
+    nome: 'INVENTÁRIO IMP. ZEBRA',
+    url: 'https://santacruzdistribuidora.sharepoint.com/:x:/r/sites/DocumentosTI/Documentos%20Compartilhados/Documenta%C3%A7%C3%A3o%20Suporte%20local/Inventarios%20e%20descartes/inventario%20impressoras%20Zebra%20e%20Laser%202025.xlsx?d=waa09140063d846eb963e0e085532c8d2&csf=1&web=1&e=LVBUaZ',
+    categoria: 'Ferramentas Administrativas',
+    descricao: 'Controle de equipamento zebra',
+  },
+  {
+    id: '9',
+    nome: 'QRcod  PARA COLETOR',
+    url: '',
+    categoria: 'Ferramentas Administrativas',
+    arquivoPDF: [
+      { nome: '', arquivo: '/pdfs/QRcod Coletores.pdf' }
+    ],
+    descricao: 'QRcod para coletor 60k 61K ZEBRA'
+  },
+];
+
+export default function PortalFerramentas() {
+  const ferramentasPorCategoria = ferramentas.reduce((acc, ferramenta) => {
+    if (!acc[ferramenta.categoria]) {
+      acc[ferramenta.categoria] = [];
+    }
+    acc[ferramenta.categoria].push(ferramenta);
+    return acc;
+  }, {} as Record<string, Ferramenta[]>);
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
+    <div className="bg-blue-50 min-h-screen">
+      <Head>
+        <title>Portal de Ferramentas - Suporte Local</title>
+      </Head>
+      
+      {/* Logo Centralizado */}
+      <div className="flex justify-center py-6">
+        <Image 
+          src="/logo.png" 
+          alt="Logo da Empresa" 
+          width={300} 
+          height={100} 
+          className="object-contain"
         />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+      </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      <div className="container mx-auto px-4 pb-8">
+        <h1 className="text-3xl font-bold mb-6 text-black text-center">Portal de Ferramentas</h1>
+        
+        {Object.entries(ferramentasPorCategoria).map(([categoria, ferramentasCategoria]) => (
+          <div key={categoria} className="mb-8">
+            <h2 className="text-2xl font-semibold mb-4 text-black">{categoria}</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {ferramentasCategoria.map((ferramenta) => (
+                <div 
+                  key={ferramenta.id} 
+                  className="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow flex flex-col border-l-4 border-blue-200"
+                >
+                  <h3 className="text-xl font-medium mb-2 text-blue-800">{ferramenta.nome}</h3>
+                  <p className="text-blue-600 mb-3 flex-grow">{ferramenta.descricao}</p>
+                  
+                  <div className="flex flex-col space-y-2">
+                    {ferramenta.url && (
+                      <Link 
+                        href={ferramenta.url} 
+                        target="_blank" 
+                        className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-center"
+                      >
+                        Acessar
+                      </Link>
+                    )}
+                    
+                    {ferramenta.arquivoPDF && ferramenta.arquivoPDF.map((pdf, index) => (
+                      <Link 
+                        key={index}
+                        href={pdf.arquivo} 
+                        target="_blank" 
+                        className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-center"
+                      >
+                        PDF {pdf.nome}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
